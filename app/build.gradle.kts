@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     kotlin("kapt")
     alias(libs.plugins.google.services)
+    id("com.google.firebase.crashlytics")
 }
 val clientId: String = project.findProperty("CLIENT_ID") as String? ?: ""
 val clientSecret: String = project.findProperty("CLIENT_SECRET") as String? ?: ""
@@ -28,15 +29,19 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-        debug {
-            isMinifyEnabled = false
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled = true
+                unstrippedNativeLibsDir = layout.buildDirectory.dir("intermediates/merged_native_libs/release/out/lib").get().asFile
+
+            }
         }
     }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
