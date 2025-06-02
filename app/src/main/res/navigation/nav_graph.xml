@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/genresFragment"
+        android:name="com.example.everynoiseatonce.presentation.ui.GenresFragment"
+        android:label="Genres" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.everynoiseatonce.presentation.ui.FavoritesFragment"
+        android:label="Favs" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.everynoiseatonce.presentation.ui.ProfileFragment"
+        android:label="Profile" />
+</navigation>

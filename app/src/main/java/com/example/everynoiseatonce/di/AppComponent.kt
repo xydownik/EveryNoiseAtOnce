@@ -2,7 +2,10 @@
 package com.example.everynoiseatonce.di
 
 import android.app.Application
-import com.example.everynoiseatonce.presentation.ui.MainFragment
+import com.example.everynoiseatonce.presentation.activity.MainActivity
+import com.example.everynoiseatonce.presentation.ui.FavoritesFragment
+import com.example.everynoiseatonce.presentation.ui.GenresFragment
+import com.example.everynoiseatonce.presentation.ui.ProfileFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -16,5 +19,8 @@ interface AppComponent {
         fun create(@BindsInstance app: Application): AppComponent
     }
 
-    fun inject(fragment: MainFragment)
+    fun inject(fragment: GenresFragment)
+    fun inject(activity: MainActivity)
+    fun inject(fragment: ProfileFragment)
+    fun inject(fragment: FavoritesFragment)
 }
