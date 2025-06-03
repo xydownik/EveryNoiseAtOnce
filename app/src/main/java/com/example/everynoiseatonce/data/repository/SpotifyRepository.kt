@@ -1,6 +1,9 @@
 package com.example.everynoiseatonce.data.repository
 
 import android.util.Base64
+import android.util.Log
+import android.util.Log.e
+import android.util.Log.println
 import com.example.everynoiseatonce.BuildConfig
 import com.example.everynoiseatonce.data.api.SpotifyApi
 import com.example.everynoiseatonce.data.api.SpotifyAuthApi
@@ -25,14 +28,31 @@ class SpotifyRepository @Inject constructor(
 
         val credentials = "${BuildConfig.SPOTIFY_CLIENT_ID}:${BuildConfig.SPOTIFY_CLIENT_SECRET}"
         val basicAuth = "Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
+        Log.d("SpotifyAuth", "Authorization header: $basicAuth")
 
         return withContext(Dispatchers.IO) {
-            val response = authApi.getAccessToken(basicAuth)
-            val access = response.body()?.accessToken
-            token = access
-            access?.let { "Bearer $it" }
+            try {
+                val response = authApi.getAccessToken(basicAuth)
+                val errorBody = response.errorBody()?.string()
+                e("SpotifyAuth", "Raw response error body: $errorBody")
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("SpotifyAuth", "Access token response: $body")
+                    val access = body?.accessToken
+                    token = access
+                    access?.let { "Bearer $it" }
+                } else {
+                    val error = response.errorBody()?.string()
+                    e("SpotifyAuth", "Error getting token: ${response.code()} - $error")
+                    null
+                }
+            } catch (e: Exception) {
+                e("SpotifyAuth", "Exception during token fetch", e)
+                null
+            }
         }
     }
+
 
     override suspend fun getGenres(): GenresResponse? {
         val authHeader = ensureToken() ?: return null

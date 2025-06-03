@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.retrofit2.converter.moshi)
     implementation(libs.okhttp3.okhttp)
     implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.moshi.kotlin)
 
     // Dagger 2 или Hilt
     implementation(libs.dagger)
