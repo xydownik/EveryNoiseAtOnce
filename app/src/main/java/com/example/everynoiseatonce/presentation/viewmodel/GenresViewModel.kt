@@ -3,14 +3,11 @@ package com.example.everynoiseatonce.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.everynoiseatonce.domain.model.Genre
-import com.example.everynoiseatonce.domain.usecase.GetGenresUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class GenresViewModel : ViewModel() {
 

@@ -3,6 +3,7 @@ package com.example.everynoiseatonce.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.everynoiseatonce.EveryNoiseApp
 import com.example.everynoiseatonce.databinding.FragmentProfileBinding
 import com.example.everynoiseatonce.presentation.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import javax.inject.Inject
 
 class ProfileFragment : Fragment() {

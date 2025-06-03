@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.google.services)
     id("com.google.firebase.crashlytics")
+    id("androidx.navigation.safeargs.kotlin") version "2.7.7"
 }
 val clientId: String = project.findProperty("CLIENT_ID") as String? ?: ""
 val clientSecret: String = project.findProperty("CLIENT_SECRET") as String? ?: ""

@@ -1,37 +1,39 @@
 package com.example.everynoiseatonce.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.everynoiseatonce.R
+import com.example.everynoiseatonce.databinding.ItemGenreBinding
 import com.example.everynoiseatonce.domain.model.Genre
 
-class GenresAdapter :
-    ListAdapter<Genre, GenresAdapter.GenreViewHolder>(GenreDiffCallback()) {
-
-    inner class GenreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val genreText: TextView = itemView.findViewById(R.id.genreNameTextView)
-    }
+class GenresAdapter(
+    private val onGenreClick: (Genre) -> Unit
+) : ListAdapter<Genre, GenresAdapter.GenreViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_genre, parent, false)
-        return GenreViewHolder(view)
+        val binding = ItemGenreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return GenreViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
-        holder.genreText.text = getItem(position).name
+        holder.bind(getItem(position))
     }
 
-    class GenreDiffCallback : DiffUtil.ItemCallback<Genre>() {
-        override fun areItemsTheSame(oldItem: Genre, newItem: Genre): Boolean =
-            oldItem.name == newItem.name
+    inner class GenreViewHolder(private val binding: ItemGenreBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(genre: Genre) {
+            binding.genreNameTextView.text = genre.name
+            binding.root.setOnClickListener { onGenreClick(genre) }
+        }
+    }
 
-        override fun areContentsTheSame(oldItem: Genre, newItem: Genre): Boolean =
-            oldItem == newItem
+    companion object {
+        val DiffCallback = object : DiffUtil.ItemCallback<Genre>() {
+            override fun areItemsTheSame(oldItem: Genre, newItem: Genre) = oldItem.name == newItem.name
+            override fun areContentsTheSame(oldItem: Genre, newItem: Genre) = oldItem == newItem
+        }
     }
 }
+

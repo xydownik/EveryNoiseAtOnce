@@ -3,6 +3,7 @@ package com.example.everynoiseatonce.di
 
 import android.app.Application
 import com.example.everynoiseatonce.presentation.activity.MainActivity
+import com.example.everynoiseatonce.presentation.ui.ArtistsFragment
 import com.example.everynoiseatonce.presentation.ui.FavoritesFragment
 import com.example.everynoiseatonce.presentation.ui.GenresFragment
 import com.example.everynoiseatonce.presentation.ui.ProfileFragment
@@ -23,4 +24,5 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(fragment: ProfileFragment)
     fun inject(fragment: FavoritesFragment)
+    fun inject(fragment: ArtistsFragment)
 }

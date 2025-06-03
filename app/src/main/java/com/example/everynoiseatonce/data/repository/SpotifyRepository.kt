@@ -8,7 +8,6 @@ import com.example.everynoiseatonce.BuildConfig
 import com.example.everynoiseatonce.data.api.SpotifyApi
 import com.example.everynoiseatonce.data.api.SpotifyAuthApi
 import com.example.everynoiseatonce.domain.model.ArtistSearchResponse
-import com.example.everynoiseatonce.domain.model.GenresResponse
 import com.example.everynoiseatonce.domain.repository.GenreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -50,14 +49,6 @@ class SpotifyRepository @Inject constructor(
                 e("SpotifyAuth", "Exception during token fetch", e)
                 null
             }
-        }
-    }
-
-
-    override suspend fun getGenres(): GenresResponse? {
-        val authHeader = ensureToken() ?: return null
-        return withContext(Dispatchers.IO) {
-            spotifyApi.getAvailableGenres(authHeader)
         }
     }
 

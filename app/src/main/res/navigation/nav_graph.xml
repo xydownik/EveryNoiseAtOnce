@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/profileFragment">
 
     <fragment
         android:id="@+id/genresFragment"
         android:name="com.example.everynoiseatonce.presentation.ui.GenresFragment"
-        android:label="Genres" />
+        android:label="Genres" >
+        <action
+            android:id="@+id/action_genresFragment_to_artistsFragment"
+            app:destination="@id/artistsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -17,4 +22,12 @@
         android:id="@+id/profileFragment"
         android:name="com.example.everynoiseatonce.presentation.ui.ProfileFragment"
         android:label="Profile" />
+    <fragment
+        android:id="@+id/artistsFragment"
+        android:name="com.example.everynoiseatonce.presentation.ui.ArtistsFragment"
+        tools:layout="@layout/fragment_artists">
+        <argument
+            android:name="genreName"
+            app:argType="string" />
+    </fragment>
 </navigation>

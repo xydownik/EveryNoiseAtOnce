@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.everynoiseatonce.databinding.FragmentGenresBinding
 import com.example.everynoiseatonce.domain.model.Genre
@@ -40,7 +41,12 @@ class GenresFragment : Fragment() {
 
         val genres = loadGenresFromAssets()
         viewModel.setGenres(genres)
-        adapter = GenresAdapter()
+
+        adapter = GenresAdapter { genre ->
+            val action = GenresFragmentDirections.actionGenresFragmentToArtistsFragment(genre.name)
+            findNavController().navigate(action)
+        }
+
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
