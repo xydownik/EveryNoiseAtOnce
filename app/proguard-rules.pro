@@ -1,21 +1,53 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# --- AndroidX ViewModel ---
+-keep public class * extends androidx.lifecycle.ViewModel
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# --- Moshi JSON (если используешь) ---
+-keepclassmembers class * {
+    @com.squareup.moshi.* <fields>;
+}
+-dontwarn com.squareup.moshi.**
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# --- Retrofit (интерфейсы и модели) ---
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# --- OkHttp ---
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
+
+# --- ExoPlayer (если используется) ---
+-dontwarn com.google.android.exoplayer2.**
+-keep class com.google.android.exoplayer2.** { *; }
+
+# --- Dagger 2 ---
+-keep class dagger.** { *; }
+-dontwarn dagger.**
+-keep class javax.inject.** { *; }
+-dontwarn javax.inject.**
+
+# --- Firebase ---
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+
+# --- Navigation SafeArgs ---
+-keep class **NavDirections
+-keepclassmembers class * {
+    public static *** from*(...);
+    public static *** action*();
+}
+
+# --- Основные правила ---
+-dontwarn kotlin.**
+-keep class kotlin.Metadata { *; }
+
+# --- Сохраняем MainActivity и все фрагменты ---
+-keep class com.example.everynoiseatonce.presentation.ui.** { *; }
+
+# --- Удаляем неиспользуемые ресурсы ---
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+}

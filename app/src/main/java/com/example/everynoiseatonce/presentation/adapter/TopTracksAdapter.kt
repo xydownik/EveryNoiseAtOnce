@@ -3,12 +3,17 @@ package com.example.everynoiseatonce.presentation.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionScene.Transition.TransitionOnClick
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.everynoiseatonce.databinding.ItemTopTrackBinding
 import com.example.everynoiseatonce.domain.model.Track
 
-class TopTracksAdapter : RecyclerView.Adapter<TopTracksAdapter.TopTrackViewHolder>() {
+
+
+class TopTracksAdapter(
+    private val onTrackClick: (Track) -> Unit
+) : RecyclerView.Adapter<TopTracksAdapter.TopTrackViewHolder>() {
 
     private val tracks = mutableListOf<Track>()
 
@@ -34,6 +39,10 @@ class TopTracksAdapter : RecyclerView.Adapter<TopTracksAdapter.TopTrackViewHolde
         fun bind(track: Track) {
             binding.trackNameTextView.text = track.name
             Glide.with(binding.root).load(track.album.images.firstOrNull()?.url).into(binding.trackImageView)
+
+            binding.root.setOnClickListener {
+                onTrackClick(track)
+            }
         }
     }
 }

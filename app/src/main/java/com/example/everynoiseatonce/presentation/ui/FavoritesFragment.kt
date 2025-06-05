@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.everynoiseatonce.EveryNoiseApp
 import com.example.everynoiseatonce.R
@@ -44,12 +45,32 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModel = viewModels<FavoritesViewModel> { viewModelFactory }.value
-        adapter = FavoritesAdapter { item ->
-            when (item) {
-                is Artist -> viewModel.toggleFavoriteArtist(item)
-                is Genre -> viewModel.toggleFavoriteGenre(item)
+        adapter = FavoritesAdapter(
+            onFavoriteClick = { item ->
+                when (item) {
+                    is Artist -> viewModel.toggleFavoriteArtist(item)
+                    is Genre -> viewModel.toggleFavoriteGenre(item)
+                }
+            },
+            onItemClick = { item ->
+                when (item) {
+                    is Artist -> {
+                        val action = FavoritesFragmentDirections.actionFavoritesFragmentToArtistDetailsFragment(
+                            artistId = item.id,
+                            artistName = item.name,
+                            artistImageUrl = item.images?.firstOrNull()?.url ?: "",
+                            spotifyUrl = item.external_urls.spotify ?: ""
+                        )
+                        findNavController().navigate(action)
+                    }
+                    is Genre -> {
+                        val action = FavoritesFragmentDirections.actionFavoritesFragmentToArtistsFragment(item.name)
+                        findNavController().navigate(action)
+                    }
+                }
             }
-        }
+        )
+
         binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.favoritesRecyclerView.adapter = adapter
 

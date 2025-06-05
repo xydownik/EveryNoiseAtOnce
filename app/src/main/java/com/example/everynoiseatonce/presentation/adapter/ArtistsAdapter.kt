@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.example.everynoiseatonce.R
 import com.example.everynoiseatonce.databinding.ItemArtistBinding
@@ -13,7 +14,8 @@ import com.example.everynoiseatonce.domain.model.Artist
 
 class ArtistsAdapter(
     private val onArtistClick: (Artist) -> Unit,
-    private val onFavoriteClick: (Artist) -> Unit
+    private val onFavoriteClick: (Artist) -> Unit,
+    private val onItemClick: (Artist) -> Unit
 ) : ListAdapter<Artist, ArtistsAdapter.ArtistViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -27,11 +29,16 @@ class ArtistsAdapter(
 
     inner class ArtistViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val circularProgressDrawable = CircularProgressDrawable(binding.artistImage.context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
+        }
         fun bind(artist: Artist) {
             binding.artistName.text = artist.name
             Glide.with(binding.artistImage.context)
                 .load(artist.images?.firstOrNull()?.url)
-                .placeholder(R.drawable.ic_default_avatar)
+                .placeholder(circularProgressDrawable)
                 .into(binding.artistImage)
 
             val iconRes = if (artist.isFavorite) R.drawable.added else R.drawable.add_to_fav
@@ -44,6 +51,10 @@ class ArtistsAdapter(
                 val updated = artist.copy(isFavorite = !artist.isFavorite)
                 onFavoriteClick(updated)
             }
+            binding.root.setOnClickListener {
+                onItemClick(artist)
+            }
+
         }
     }
 

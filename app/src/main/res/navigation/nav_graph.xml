@@ -16,7 +16,14 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.everynoiseatonce.presentation.ui.FavoritesFragment"
-        android:label="Favs" />
+        android:label="Favs" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_artistDetailsFragment"
+            app:destination="@id/artistDetailsFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_artistsFragment"
+            app:destination="@id/artistsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"

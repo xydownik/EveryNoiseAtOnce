@@ -57,7 +57,15 @@ class ArtistsFragment : Fragment() {
             },
             onFavoriteClick = { artist ->
                 viewModel.toggleFavoriteArtist(artist)
-            }
+            },
+            onItemClick = {artist ->
+                val action = ArtistsFragmentDirections.actionArtistsFragmentToArtistDetailsFragment(
+                    artist.id,
+                    artist.name,
+                    artist.images?.firstOrNull()?.url ?: "",
+                    artist.external_urls.spotify
+                )
+                findNavController().navigate(action)}
         )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())

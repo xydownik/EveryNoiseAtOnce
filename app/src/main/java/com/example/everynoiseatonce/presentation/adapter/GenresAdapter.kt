@@ -12,7 +12,8 @@ import com.example.everynoiseatonce.domain.model.Genre
 
 class GenresAdapter(
     private val onGenreClick: (Genre) -> Unit,
-    private val onFavoriteClick: (Genre) -> Unit
+    private val onFavoriteClick: (Genre) -> Unit,
+    private val onItemClick: (Genre) -> Unit
 ) : ListAdapter<Genre, GenresAdapter.GenreViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
@@ -40,6 +41,9 @@ class GenresAdapter(
                 binding.favoriteIcon.setImageResource(
                     if (updatedGenre.isFavorite) R.drawable.added else R.drawable.add_to_fav
                 )
+            }
+            binding.root.setOnClickListener {
+                onItemClick(genre)
             }
         }
     }

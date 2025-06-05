@@ -26,20 +26,24 @@ android {
         buildConfigField("String", "SPOTIFY_CLIENT_ID", "\"$clientId\"")
         buildConfigField("String", "SPOTIFY_CLIENT_SECRET", "\"$clientSecret\"")
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:/Users/Public/release-key1.jks")
+            storePassword = "A31c12e04"
+            keyAlias = "key1"
+            keyPassword = "A31c12e04"
+        }
+    }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            firebaseCrashlytics {
-                nativeSymbolUploadEnabled = true
-                unstrippedNativeLibsDir = layout.buildDirectory.dir("intermediates/merged_native_libs/release/out/lib").get().asFile
-
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -82,6 +86,7 @@ dependencies {
     // Room (кэш)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.swiperefreshlayout)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
@@ -120,5 +125,9 @@ dependencies {
 
     // Unit-testing
     testImplementation(libs.junit)
+
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
+
 }
 

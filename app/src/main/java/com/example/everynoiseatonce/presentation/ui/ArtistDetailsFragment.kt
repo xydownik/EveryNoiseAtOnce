@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,12 +18,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.everynoiseatonce.EveryNoiseApp
 import com.example.everynoiseatonce.R
+import com.example.everynoiseatonce.domain.model.Album
+import com.example.everynoiseatonce.domain.model.ExternalUrls
+import com.example.everynoiseatonce.domain.model.Track
 import com.example.everynoiseatonce.presentation.adapter.RelatedArtistsAdapter
 import com.example.everynoiseatonce.presentation.adapter.TopTracksAdapter
 import com.example.everynoiseatonce.presentation.viewmodel.ArtistDetailsViewModel
 import com.example.everynoiseatonce.presentation.viewmodel.ArtistDetailsViewModelFactory
+import com.example.everynoiseatonce.service.PlayerService
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 class ArtistDetailsFragment : Fragment() {
 
@@ -70,8 +76,25 @@ class ArtistDetailsFragment : Fragment() {
         val factory = ArtistDetailsViewModelFactory(repository)
         viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[ArtistDetailsViewModel::class.java]
 
+        val testTrack = Track(
+            id = "123",
+            name = "Demo",
+            preview_url = "android.resource://${requireContext().packageName}/raw/sample_track",
+            external_urls = ExternalUrls(""),
+            album = Album("Demo", listOf()),
+            artists = listOf()
+        )
         // Топ треки
-        topTracksAdapter = TopTracksAdapter()
+        topTracksAdapter = TopTracksAdapter {
+            val intent = Intent(context, PlayerService::class.java).apply {
+                action = PlayerService.ACTION_PLAY
+                putExtra("track", testTrack)
+            }
+            context?.startService(intent)
+
+        }
+        topTracksRecycler.adapter = topTracksAdapter
+
         topTracksRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = topTracksAdapter
@@ -104,8 +127,16 @@ class ArtistDetailsFragment : Fragment() {
         }
 
         openInSpotify.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(spotifyUrl)))
+            val spotifyIntent = Intent(Intent.ACTION_VIEW, "spotify:artist:${args.artistId}".toUri())
+            spotifyIntent.`package` = "com.spotify.music"
+
+            if (spotifyIntent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(spotifyIntent)
+            } else {
+                startActivity(Intent(Intent.ACTION_VIEW, args.spotifyUrl.toUri()))
+            }
         }
+
 
         viewModel.loadArtistDetails(artistId)
     }

@@ -1,7 +1,6 @@
 package com.example.everynoiseatonce.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,7 +10,10 @@ import com.example.everynoiseatonce.databinding.ItemFavoriteGenreBinding
 import com.example.everynoiseatonce.domain.model.Artist
 import com.example.everynoiseatonce.domain.model.Genre
 
-class FavoritesAdapter(private val onFavoriteClick: (Any) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FavoritesAdapter(
+    private val onFavoriteClick: (Any) -> Unit,
+    private val onItemClick: (Any) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<Any>()
 
@@ -37,15 +39,11 @@ class FavoritesAdapter(private val onFavoriteClick: (Any) -> Unit) : RecyclerVie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ARTIST -> {
-                val binding = ItemFavoriteArtistBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
+                val binding = ItemFavoriteArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 ArtistViewHolder(binding)
             }
             TYPE_GENRE -> {
-                val binding = ItemFavoriteGenreBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
+                val binding = ItemFavoriteGenreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 GenreViewHolder(binding)
             }
             else -> throw IllegalArgumentException("Invalid view type")
@@ -74,12 +72,13 @@ class FavoritesAdapter(private val onFavoriteClick: (Any) -> Unit) : RecyclerVie
             binding.favoriteIcon.setImageResource(icon)
 
             binding.favoriteIcon.setOnClickListener {
-                artist.isFavorite = !artist.isFavorite
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    notifyItemChanged(position)
-                }
-                onFavoriteClick(artist)
+                val updated = artist.copy(isFavorite = !artist.isFavorite)
+                onFavoriteClick(updated)
+                notifyItemChanged(bindingAdapterPosition)
+            }
+
+            binding.root.setOnClickListener {
+                onItemClick(artist)
             }
         }
     }
@@ -92,14 +91,14 @@ class FavoritesAdapter(private val onFavoriteClick: (Any) -> Unit) : RecyclerVie
             binding.favoriteIcon.setImageResource(icon)
 
             binding.favoriteIcon.setOnClickListener {
-                genre.isFavorite = !genre.isFavorite
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    notifyItemChanged(position)
-                }
-                onFavoriteClick(genre)
+                val updated = genre.copy(isFavorite = !genre.isFavorite)
+                onFavoriteClick(updated)
+                notifyItemChanged(bindingAdapterPosition)
+            }
+
+            binding.root.setOnClickListener {
+                onItemClick(genre)
             }
         }
     }
-
 }

@@ -56,6 +56,10 @@ class GenresFragment : Fragment() {
             },
             onFavoriteClick = { genre ->
                 viewModel.toggleFavoriteGenre(genre)
+            },
+            onItemClick = { genre ->
+                val action = GenresFragmentDirections.actionGenresFragmentToArtistsFragment(genre.name)
+                findNavController().navigate(action)
             }
         )
 
