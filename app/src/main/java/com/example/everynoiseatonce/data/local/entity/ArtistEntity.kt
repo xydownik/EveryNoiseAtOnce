@@ -12,7 +12,7 @@ data class ArtistEntity(
     val name: String,
     val imageUrl: String?,
     val spotifyUrl: String,
-    val parentId: String? = null // для кэширования связанных артистов
+    val parentId: String? = null
 ){
     companion object {
         fun from(artist: Artist, parentId: String): ArtistEntity {

@@ -10,7 +10,7 @@
         android:id="@+id/searchInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search genres..."
+        android:hint="@string/search_genres"
         android:inputType="text"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"

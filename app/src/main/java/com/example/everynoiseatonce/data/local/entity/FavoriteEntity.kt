@@ -8,7 +8,7 @@ import com.example.everynoiseatonce.domain.model.ExternalUrls
 data class FavoriteEntity(
     val id: String,
     val name: String,
-    val type: String, // "genre" or "artist"
+    val type: String,
     val imageUrl: String? = null,
     val externalUrl: String? = null,
     val userId: String

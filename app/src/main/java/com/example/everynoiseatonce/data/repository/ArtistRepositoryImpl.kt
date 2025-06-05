@@ -26,7 +26,6 @@ class ArtistRepositoryImpl @Inject constructor(
             val response = spotifyApi.getTopTracks(authProvider.getToken(), artistId)
             val tracks = response.tracks
 
-            // Save to Room
             trackDao.deleteTracksByArtistId(artistId)
             trackDao.insertAll(tracks.map { TrackEntity.from(it, artistId) })
 

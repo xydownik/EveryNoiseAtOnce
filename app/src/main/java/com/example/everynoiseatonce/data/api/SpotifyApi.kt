@@ -10,14 +10,13 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SpotifyApi {
-    // Поиск артистов по жанру (через поисковый запрос типа "genre:<genre>")
     @GET("v1/search")
     suspend fun searchArtistsByGenre(
         @Header("Authorization") authHeader: String,
-        @Query("q") query: String,         // e.g., "genre:rock"
-        @Query("type") type: String = "artist",
-//        @Query("limit") limit: Int = 20
+        @Query("q") query: String,
+        @Query("type") type: String = "artist"
     ): ArtistSearchResponse
+
     @GET("v1/artists/{id}/top-tracks")
     suspend fun getTopTracks(
         @Header("Authorization") token: String?,

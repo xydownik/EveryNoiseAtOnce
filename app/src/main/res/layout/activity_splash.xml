@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/textEvery"
-        android:text="Every"
+        android:text="@string/every"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/textNoise"
-        android:text="Noise"
+        android:text="@string/noise"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/textAt"
-        android:text="At"
+        android:text="@string/at"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -47,7 +47,7 @@
 
     <TextView
         android:id="@+id/textOnce"
-        android:text="Once"
+        android:text="@string/once"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -60,7 +60,7 @@
 
     <Button
         android:id="@+id/buttonStart"
-        android:text="Let’s Start"
+        android:text="@string/let_s_start"
         android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

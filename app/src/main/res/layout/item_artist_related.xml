@@ -17,7 +17,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Artist Image" />
+            android:contentDescription="@string/artist_image" />
 
         <TextView
             android:id="@+id/textViewRelatedArtistName"
@@ -28,6 +28,6 @@
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@android:color/black"
-            android:text="Artist Name" />
+            android:text="@string/artist_name" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

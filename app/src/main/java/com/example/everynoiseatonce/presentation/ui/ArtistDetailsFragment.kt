@@ -53,24 +53,20 @@ class ArtistDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // View binding
         artistImage = view.findViewById(R.id.artistImage)
         artistNameText = view.findViewById(R.id.artistName)
         openInSpotify = view.findViewById(R.id.openInSpotify)
         topTracksRecycler = view.findViewById(R.id.topTracksRecyclerView)
         relatedArtistsRecycler = view.findViewById(R.id.relatedArtistsRecyclerView)
 
-        // Аргументы
         val artistId = args.artistId
         val artistName = args.artistName
         val imageUrl = args.artistImageUrl
         spotifyUrl = args.spotifyUrl
 
-        // Установка данных в UI
         artistNameText.text = artistName
         Glide.with(this).load(imageUrl).into(artistImage)
 
-        // Вьюмодель
         val appComponent = (requireActivity().application as EveryNoiseApp).appComponent
         val repository = appComponent.artistRepository()
         val factory = ArtistDetailsViewModelFactory(repository)
@@ -84,7 +80,6 @@ class ArtistDetailsFragment : Fragment() {
             album = Album("Demo", listOf()),
             artists = listOf()
         )
-        // Топ треки
         topTracksAdapter = TopTracksAdapter {
             val intent = Intent(context, PlayerService::class.java).apply {
                 action = PlayerService.ACTION_PLAY
@@ -100,7 +95,6 @@ class ArtistDetailsFragment : Fragment() {
             adapter = topTracksAdapter
         }
 
-        // Похожие артисты
         relatedArtistsAdapter = RelatedArtistsAdapter { artist ->
             val direction = ArtistDetailsFragmentDirections.actionArtistDetailsFragmentSelf(
                 artist.id,
@@ -113,7 +107,6 @@ class ArtistDetailsFragment : Fragment() {
         relatedArtistsRecycler.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         relatedArtistsRecycler.adapter = relatedArtistsAdapter
 
-        // Обновление UI через StateFlow
         lifecycleScope.launch {
             viewModel.topTracks.collectLatest {
                 topTracksAdapter.submitList(it)

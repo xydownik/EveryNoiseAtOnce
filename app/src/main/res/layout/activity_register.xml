@@ -9,30 +9,30 @@
         android:id="@+id/etNickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nickname" />
+        android:hint="@string/nickname" />
 
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email" />
+        android:hint="@string/email" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register" />
+        android:text="@string/register" />
 
     <Button
         android:id="@+id/btnGoToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have account?" />
+        android:text="@string/already_have_account" />
 </LinearLayout>

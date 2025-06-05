@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Artist Image" />
+            android:contentDescription="@string/artist_image" />
 
         <TextView
             android:id="@+id/artistName"
@@ -32,11 +32,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_green_dark"
-            android:text="Open in Spotify"
+            android:text="@string/open_in_spotify"
             android:layout_marginTop="4dp" />
 
         <TextView
-            android:text="Top Tracks"
+            android:text="@string/top_tracks"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginTop="16dp"
@@ -51,7 +51,7 @@
             android:layout_marginTop="8dp"/>
 
         <TextView
-            android:text="Related Artists"
+            android:text="@string/related_artists"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginTop="16dp"
@@ -69,6 +69,5 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="32dp" />
-        <!-- Добавлен нижний отступ, чтобы элементы не упирались в край -->
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

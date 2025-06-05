@@ -3,7 +3,6 @@ package com.example.everynoiseatonce.data.repository
 import android.util.Base64
 import android.util.Log
 import android.util.Log.e
-import android.util.Log.println
 import com.example.everynoiseatonce.BuildConfig
 import com.example.everynoiseatonce.data.api.SpotifyApi
 import com.example.everynoiseatonce.data.api.SpotifyAuthApi

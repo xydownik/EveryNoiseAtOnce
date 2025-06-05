@@ -16,7 +16,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Если уже вошел — переход в профиль
         if (FirebaseAuth.getInstance().currentUser != null) {
             goToMain()
             return

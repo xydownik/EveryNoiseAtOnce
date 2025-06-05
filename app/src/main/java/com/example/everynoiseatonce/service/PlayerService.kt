@@ -45,13 +45,11 @@ class PlayerService : Service() {
                     intent.getSerializableExtra("track") as? Track
                 }
 
-                // Если трек другой — перезапускаем
                 if (track != null && track != currentTrack) {
                     currentTrack = track
                     exoPlayerHolder.play(track.preview_url ?: return START_NOT_STICKY)
                     startForeground(1, createNotification(track))
                 } else if (track == currentTrack) {
-                    // Повторное нажатие — стоп
                     stopSelf()
                 }
             }

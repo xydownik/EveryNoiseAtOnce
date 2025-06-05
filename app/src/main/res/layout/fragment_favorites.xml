@@ -15,17 +15,17 @@
             android:id="@+id/filterAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Все" />
+            android:text="@string/all" />
         <RadioButton
             android:id="@+id/filterGenres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Жанры" />
+            android:text="@string/genres" />
         <RadioButton
             android:id="@+id/filterArtists"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Артисты" />
+            android:text="@string/artists" />
     </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView

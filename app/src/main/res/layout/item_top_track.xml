@@ -18,7 +18,7 @@
         android:id="@+id/trackNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Track Name"
+        android:text="@string/track_name"
         android:textAppearance="?attr/textAppearanceBody1"
         android:maxLines="2"
         android:ellipsize="end"
