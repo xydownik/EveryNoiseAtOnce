@@ -81,6 +81,7 @@ dependencies {
 
     // Room (кэш)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.media3.exoplayer)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 

@@ -3,13 +3,14 @@ package com.example.everynoiseatonce.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.everynoiseatonce.domain.model.Genre
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import com.example.everynoiseatonce.domain.repository.FavoritesRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GenresViewModel : ViewModel() {
+class GenresViewModel @Inject constructor(
+    private val favoritesRepository: FavoritesRepository
+) : ViewModel() {
 
     private val _allGenres = MutableStateFlow<List<Genre>>(emptyList())
     val allGenres: StateFlow<List<Genre>> = _allGenres
@@ -23,11 +24,24 @@ class GenresViewModel : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun setGenres(genres: List<Genre>) {
-        _allGenres.value = genres
+        viewModelScope.launch {
+            val favorites = favoritesRepository.getFavoriteGenresFlow().first()
+            _allGenres.value = genres.map { genre ->
+                genre.copy(isFavorite = favorites.any { it.name == genre.name })
+            }
+        }
     }
 
     fun onQueryChanged(newQuery: String) {
         _query.value = newQuery
     }
-}
 
+    fun toggleFavoriteGenre(genre: Genre) {
+        viewModelScope.launch {
+            favoritesRepository.toggleGenre(genre)
+            _allGenres.value = _allGenres.value.map {
+                if (it.name == genre.name) it.copy(isFavorite = !it.isFavorite) else it
+            }
+        }
+    }
+}

@@ -1,19 +1,18 @@
 package com.example.everynoiseatonce.presentation.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.everynoiseatonce.data.api.SpotifyApi
-import com.example.everynoiseatonce.data.repository.SpotifyRepository
 import com.example.everynoiseatonce.domain.repository.FavoritesRepository
 import javax.inject.Inject
 
-
-class ArtistsViewModelFactory @Inject constructor(
-    private val repository: SpotifyRepository,
+class FavoritesViewModelFactory @Inject constructor(
     private val favoritesRepository: FavoritesRepository
 ) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ArtistsViewModel(repository, favoritesRepository) as T
+        if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
+            return FavoritesViewModel(favoritesRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

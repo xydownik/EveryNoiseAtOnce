@@ -15,3 +15,4 @@ class EveryNoiseApp : Application() {
         appComponent = DaggerAppComponent.factory().create(this)
     }
 }
+

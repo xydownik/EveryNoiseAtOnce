@@ -6,14 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.everynoiseatonce.EveryNoiseApp
 import com.example.everynoiseatonce.databinding.FragmentGenresBinding
 import com.example.everynoiseatonce.domain.model.Genre
 import com.example.everynoiseatonce.presentation.adapter.GenresAdapter
 import com.example.everynoiseatonce.presentation.viewmodel.GenresViewModel
+import com.example.everynoiseatonce.presentation.viewmodel.GenresViewModelFactory
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -37,16 +42,22 @@ class GenresFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = androidx.lifecycle.ViewModelProvider(this)[GenresViewModel::class.java]
+        val appComponent = (requireActivity().application as EveryNoiseApp).appComponent
+        val factory = GenresViewModelFactory(appComponent.favoritesRepository())
+        viewModel = ViewModelProvider(this, factory)[GenresViewModel::class.java]
 
         val genres = loadGenresFromAssets()
         viewModel.setGenres(genres)
 
-        adapter = GenresAdapter { genre ->
-            val action = GenresFragmentDirections.actionGenresFragmentToArtistsFragment(genre.name)
-            findNavController().navigate(action)
-        }
-
+        adapter = GenresAdapter(
+            onGenreClick = { genre ->
+                val action = GenresFragmentDirections.actionGenresFragmentToArtistsFragment(genre.name)
+                findNavController().navigate(action)
+            },
+            onFavoriteClick = { genre ->
+                viewModel.toggleFavoriteGenre(genre)
+            }
+        )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -57,9 +68,11 @@ class GenresFragment : Fragment() {
             viewModel.onQueryChanged(it.toString())
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.filteredGenres.collect { genres ->
-                adapter.submitList(genres)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.filteredGenres.collect { genres ->
+                    adapter.submitList(genres)
+                }
             }
         }
     }

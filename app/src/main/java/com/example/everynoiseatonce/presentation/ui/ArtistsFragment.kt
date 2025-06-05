@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.everynoiseatonce.EveryNoiseApp
 import com.example.everynoiseatonce.databinding.FragmentArtistsBinding
+import com.example.everynoiseatonce.domain.model.Artist
 import com.example.everynoiseatonce.presentation.adapter.ArtistsAdapter
 import com.example.everynoiseatonce.presentation.viewmodel.ArtistsViewModel
 import com.example.everynoiseatonce.presentation.viewmodel.ArtistsViewModelFactory
@@ -27,7 +29,6 @@ class ArtistsFragment : Fragment() {
     lateinit var viewModelFactory: ArtistsViewModelFactory
     private lateinit var viewModel: ArtistsViewModel
     private val args: ArtistsFragmentArgs by navArgs()
-    private val adapter = ArtistsAdapter()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,6 +44,21 @@ class ArtistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = viewModels<ArtistsViewModel> { viewModelFactory }.value
+
+        val adapter = ArtistsAdapter(
+            onArtistClick = { artist ->
+                val action = ArtistsFragmentDirections.actionArtistsFragmentToArtistDetailsFragment(
+                    artist.id,
+                    artist.name,
+                    artist.images?.firstOrNull()?.url ?: "",
+                    artist.external_urls.spotify
+                )
+                findNavController().navigate(action)
+            },
+            onFavoriteClick = { artist ->
+                viewModel.toggleFavoriteArtist(artist)
+            }
+        )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter

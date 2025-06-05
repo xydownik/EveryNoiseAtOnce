@@ -29,5 +29,29 @@
         <argument
             android:name="genreName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_artistsFragment_to_artistDetailsFragment"
+            app:destination="@id/artistDetailsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/artistDetailsFragment"
+        android:name="com.example.everynoiseatonce.presentation.ui.ArtistDetailsFragment"
+        android:label="Artist Details" >
+        <argument
+            android:name="artistId"
+            app:argType="string" />
+        <argument
+            android:name="artistName"
+            app:argType="string" />
+        <argument
+            android:name="artistImageUrl"
+            app:argType="string" />
+        <argument
+            android:name="spotifyUrl"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_artistDetailsFragment_self"
+            app:destination="@id/artistDetailsFragment" />
     </fragment>
 </navigation>

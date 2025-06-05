@@ -12,7 +12,8 @@ data class Artist(
     val id: String,
     val name: String,
     val images: List<Image>?,
-    val external_urls: ExternalUrls
+    val external_urls: ExternalUrls,
+    var isFavorite: Boolean = false
 )
 
 data class Image(

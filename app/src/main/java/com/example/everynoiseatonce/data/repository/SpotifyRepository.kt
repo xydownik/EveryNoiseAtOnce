@@ -7,7 +7,10 @@ import android.util.Log.println
 import com.example.everynoiseatonce.BuildConfig
 import com.example.everynoiseatonce.data.api.SpotifyApi
 import com.example.everynoiseatonce.data.api.SpotifyAuthApi
+import com.example.everynoiseatonce.domain.model.Artist
 import com.example.everynoiseatonce.domain.model.ArtistSearchResponse
+import com.example.everynoiseatonce.domain.model.AuthTokenProvider
+import com.example.everynoiseatonce.domain.model.Track
 import com.example.everynoiseatonce.domain.repository.GenreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,7 +21,7 @@ import javax.inject.Inject
 class SpotifyRepository @Inject constructor(
     private val authApi: SpotifyAuthApi,
     private val spotifyApi: SpotifyApi
-) : GenreRepository {
+) : GenreRepository, AuthTokenProvider {
 
     private var token: String? = null
 
@@ -50,6 +53,9 @@ class SpotifyRepository @Inject constructor(
                 null
             }
         }
+    }
+    override suspend fun getToken(): String? {
+        return ensureToken()
     }
 
     override suspend fun searchArtistsByGenre(genre: String): ArtistSearchResponse? {
