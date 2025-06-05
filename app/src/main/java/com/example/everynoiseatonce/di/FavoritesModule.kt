@@ -2,8 +2,10 @@ package com.example.everynoiseatonce.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.everynoiseatonce.data.local.dao.FavoriteDao
 import com.example.everynoiseatonce.data.repository.FavoritesRepositoryImpl
 import com.example.everynoiseatonce.domain.repository.FavoritesRepository
+import com.example.everynoiseatonce.utils.UserProvider
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -20,8 +22,11 @@ object FavoritesModule {
 
     @Provides
     @Singleton
-    fun provideFavoritesRepository(prefs: SharedPreferences, moshi: Moshi): FavoritesRepository {
-        return FavoritesRepositoryImpl(prefs, moshi)
+    fun provideFavoritesRepository(
+        favoriteDao: FavoriteDao,
+        userProvider: UserProvider
+    ): FavoritesRepository {
+        return FavoritesRepositoryImpl(favoriteDao, userProvider)
     }
 
 }

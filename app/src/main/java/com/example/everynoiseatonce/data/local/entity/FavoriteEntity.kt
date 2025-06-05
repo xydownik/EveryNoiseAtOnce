@@ -2,11 +2,15 @@ package com.example.everynoiseatonce.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.everynoiseatonce.domain.model.ExternalUrls
 
-@Entity(tableName = "favorites")
+@Entity(tableName = "favorites", primaryKeys = ["id", "userId"])
 data class FavoriteEntity(
-    @PrimaryKey val id: String,
+    val id: String,
     val name: String,
-    val imageUrl: String?,
-    val type: String // "genre" or "artist"
+    val type: String, // "genre" or "artist"
+    val imageUrl: String? = null,
+    val externalUrl: String? = null,
+    val userId: String
 )
+

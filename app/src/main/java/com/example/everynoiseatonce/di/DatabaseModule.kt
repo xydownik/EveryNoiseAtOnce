@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.everynoiseatonce.data.local.AppDatabase
 import com.example.everynoiseatonce.data.local.dao.ArtistDao
+import com.example.everynoiseatonce.data.local.dao.FavoriteDao
 import com.example.everynoiseatonce.data.local.dao.TrackDao
 import dagger.Module
 import dagger.Provides
@@ -29,4 +30,7 @@ object DatabaseModule {
 
     @Provides
     fun provideTrackDao(db: AppDatabase): TrackDao = db.trackDao()
+
+    @Provides
+    fun provideFavoriteDao(db: AppDatabase): FavoriteDao = db.favoritesDao()
 }

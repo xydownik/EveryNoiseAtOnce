@@ -9,8 +9,10 @@ interface FavoritesRepository {
     fun getFavoriteGenresFlow(): Flow<List<Genre>>
     fun getFavoriteArtistsFlow(): Flow<List<Artist>>
     fun getAllFavorites(): LiveData<List<Any>>
-    fun toggleGenre(genre: Genre)
-    fun toggleArtist(artist: Artist)
+
+    suspend fun toggleGenre(genre: Genre)
+    suspend fun toggleArtist(artist: Artist)
+
     fun isGenreFavorite(genre: Genre): Boolean
     fun isArtistFavorite(artist: Artist): Boolean
 }

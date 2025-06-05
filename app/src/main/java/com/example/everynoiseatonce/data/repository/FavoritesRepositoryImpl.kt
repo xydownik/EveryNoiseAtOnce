@@ -1,81 +1,101 @@
 package com.example.everynoiseatonce.data.repository
 
-import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import com.example.everynoiseatonce.data.local.dao.FavoriteDao
+import com.example.everynoiseatonce.data.local.entity.FavoriteEntity
 import com.example.everynoiseatonce.domain.model.Artist
+import com.example.everynoiseatonce.domain.model.ExternalUrls
 import com.example.everynoiseatonce.domain.model.Genre
+import com.example.everynoiseatonce.domain.model.Image
 import com.example.everynoiseatonce.domain.repository.FavoritesRepository
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.example.everynoiseatonce.utils.UserProvider
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class FavoritesRepositoryImpl @Inject constructor(
-    private val prefs: SharedPreferences,
-    moshi: Moshi
+    private val dao: FavoriteDao,
+    private val userProvider: UserProvider
 ) : FavoritesRepository {
 
-    private val genreType = Types.newParameterizedType(List::class.java, Genre::class.java)
-    private val artistType = Types.newParameterizedType(List::class.java, Artist::class.java)
-    private val genreAdapter = moshi.adapter<List<Genre>>(genreType)
-    private val artistAdapter = moshi.adapter<List<Artist>>(artistType)
-
-    private val _favoriteGenres = MutableStateFlow(loadGenres())
-    private val _favoriteArtists = MutableStateFlow(loadArtists())
-
-    override fun getFavoriteGenresFlow(): StateFlow<List<Genre>> = _favoriteGenres
-    override fun getFavoriteArtistsFlow(): StateFlow<List<Artist>> = _favoriteArtists
-    override fun getAllFavorites(): LiveData<List<Any>> = MutableLiveData((_favoriteGenres.value ?: emptyList()) + (_favoriteArtists.value ?: emptyList()))
-
-    override fun toggleGenre(genre: Genre) {
-        val current = _favoriteGenres.value.toMutableList() ?: mutableListOf()
-        if (current.any { it.name == genre.name }) {
-            current.removeAll { it.name == genre.name }
-        } else {
-            current.add(genre)
+    override fun getFavoriteGenresFlow(): Flow<List<Genre>> {
+        val userId = userProvider.getUserId()
+        return dao.getFavoritesByType("genre", userId).map { list ->
+            list.map { Genre(name = it.name, isFavorite = true) }
         }
-        _favoriteGenres.value = current
-        saveGenres(current)
     }
 
-    override fun toggleArtist(artist: Artist) {
-        val current = _favoriteArtists.value?.toMutableList() ?: mutableListOf()
-        if (current.any { it.id == artist.id }) {
-            current.removeAll { it.id == artist.id }
-        } else {
-            current.add(artist)
+    override fun getFavoriteArtistsFlow(): Flow<List<Artist>> {
+        val userId = userProvider.getUserId()
+        return dao.getFavoritesByType("artist", userId).map { list ->
+            list.map {
+                Artist(
+                    id = it.id,
+                    name = it.name,
+                    images = it.imageUrl?.let { url -> listOf(Image(url)) },
+                    external_urls = ExternalUrls(it.externalUrl ?: ""),
+                    isFavorite = true
+                )
+            }
         }
-        _favoriteArtists.value = current
-        saveArtists(current)
     }
 
-    override fun isGenreFavorite(genre: Genre): Boolean {
-        return _favoriteGenres.value.any { it.name == genre.name }
+    override fun getAllFavorites(): LiveData<List<Any>> {
+        val userId = userProvider.getUserId()
+        return dao.getAllFavorites(userId).map { list ->
+            list.map {
+                when (it.type) {
+                    "artist" -> Artist(
+                        id = it.id,
+                        name = it.name,
+                        images = it.imageUrl?.let { url -> listOf(Image(url)) },
+                        external_urls = ExternalUrls(it.externalUrl ?: ""),
+                        isFavorite = true
+                    )
+                    "genre" -> Genre(name = it.name, isFavorite = true)
+                    else -> throw IllegalArgumentException("Unknown type ${it.type}")
+                }
+            }
+        }.asLiveData()
     }
 
-    override fun isArtistFavorite(artist: Artist): Boolean {
-        return _favoriteArtists.value.any { it.id == artist.id }
+    override suspend fun toggleGenre(genre: Genre) {
+        val userId = userProvider.getUserId()
+        val existing = dao.getById(genre.name, userId)
+        if (existing != null) {
+            dao.deleteById(genre.name, userId)
+        } else {
+            dao.insertFavorite(
+                FavoriteEntity(
+                    id = genre.name,
+                    name = genre.name,
+                    type = "genre",
+                    userId = userId
+                )
+            )
+        }
     }
 
-    private fun saveGenres(genres: List<Genre>) {
-        prefs.edit().putString("favorite_genres", genreAdapter.toJson(genres)).apply()
+    override suspend fun toggleArtist(artist: Artist) {
+        val userId = userProvider.getUserId()
+        val existing = dao.getById(artist.id, userId)
+        if (existing != null) {
+            dao.deleteById(artist.id, userId)
+        } else {
+            dao.insertFavorite(
+                FavoriteEntity(
+                    id = artist.id,
+                    name = artist.name,
+                    type = "artist",
+                    imageUrl = artist.images?.firstOrNull()?.url,
+                    externalUrl = artist.external_urls?.spotify,
+                    userId = userId
+                )
+            )
+        }
     }
 
-    private fun saveArtists(artists: List<Artist>) {
-        prefs.edit().putString("favorite_artists", artistAdapter.toJson(artists)).apply()
-    }
-
-    private fun loadGenres(): List<Genre> {
-        val json = prefs.getString("favorite_genres", null) ?: return emptyList()
-        return genreAdapter.fromJson(json) ?: emptyList()
-    }
-
-    private fun loadArtists(): List<Artist> {
-        val json = prefs.getString("favorite_artists", null) ?: return emptyList()
-        return artistAdapter.fromJson(json) ?: emptyList()
-    }
+    override fun isGenreFavorite(genre: Genre): Boolean = false
+    override fun isArtistFavorite(artist: Artist): Boolean = false
 }
